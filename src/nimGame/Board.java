@@ -39,6 +39,7 @@ public class Board {
 		}
 		System.out.println(Arrays.toString(noOfStone.toArray()));
 	}
+	
 	public void play() {
 		displayBoard();
 		System.out.print("Please choose the stone piles(0 to " + (numberOfPiles - 1) + ")");
@@ -57,6 +58,7 @@ public class Board {
 			return new int[] {a,b};
 			//TODO:better random
 		}
+		//TODO: difficulty level
 		int firstZero = Integer.SIZE - Integer.numberOfLeadingZeros(nimSum);
 		for (int index = 0; index < noOfStone.size(); index++) {
 			int n  = noOfStone.get(index);
@@ -73,6 +75,19 @@ public class Board {
 			sum = sum ^ n;
 		}
 		return sum;
+	}
+	private boolean removeZeros(int pIndex) {
+		//first check if pIndex is valid
+		if (pIndex < noOfStone.size() && noOfStone.get(pIndex) == 0) { 
+			noOfStone.remove(pIndex);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean ifWin() {
+		while (removeZeros(0)) {} // May delete this
+		return noOfStone.isEmpty();
 	}
 	
 	public static void main(final String[] unused) {
