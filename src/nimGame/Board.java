@@ -60,6 +60,7 @@ public class Board {
 		}
 		System.out.print("Successfully choose stone picked:" +stonePicked);
 	}
+
 	public void play() {
 		displayBoard();
 		int cur = numberOfRounds % 2;
@@ -89,6 +90,7 @@ public class Board {
 			return new int[] {a,b};
 			//TODO:better random
 		}
+		//TODO: difficulty level
 		int firstZero = Integer.SIZE - Integer.numberOfLeadingZeros(nimSum);
 		for (int index = 0; index < noOfStone.size(); index++) {
 			int n  = noOfStone.get(index);
@@ -106,8 +108,23 @@ public class Board {
 		}
 		return sum;
 	}
+	private boolean removeZeros(int pIndex) {
+		//first check if pIndex is valid
+		if (pIndex < noOfStone.size() && noOfStone.get(pIndex) == 0) { 
+			noOfStone.remove(pIndex);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean ifWin() {
+		while (removeZeros(0)) {} // May delete this
+		return noOfStone.isEmpty();
+	}
 	
 	public static void main(final String[] unused) {
-		
+		setBoard();
+		setNameAndAI();
+		play();
 	}
 }
