@@ -1,6 +1,18 @@
 package nimGame;
 
 public class Player {
+	
+	
+	/**
+	 * @param isAI
+	 * @param name
+	 */
+	public Player(boolean isAI, String name) {
+		super();
+		this.isAI = isAI;
+		this.name = name;
+	}
+	
 	/**
 	 * if the player is an AI
 	 */
