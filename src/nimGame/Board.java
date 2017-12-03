@@ -39,14 +39,46 @@ public class Board {
 		}
 		System.out.println(Arrays.toString(noOfStone.toArray()));
 	}
+	
+	public void move() {
+		int pileIndex = -1;
+		Scanner myScan;
+		while (pileIndex < 0 || pileIndex > (numberOfPiles - 1)) {
+			System.out.println("Note : Enter anumber in the range that is given");
+			System.out.print("Please choose the stone piles(0 to " + (numberOfPiles - 1) + ")");
+			myScan = new Scanner(System.in);
+			pileIndex =  myScan.nextInt();
+		}
+		System.out.print("Successfully choose pile index:" + pileIndex);
+		int stonePicked = -1;
+		while (stonePicked <= 0 || stonePicked > noOfStone.get(pileIndex)) {
+			System.out.println("Note : Enter anumber in the range that is given");
+			System.out.print("Plear choose the number of stones "
+					+ "that you can going to pick up(1 + " + noOfStone.get(pileIndex) + ")");
+			myScan = new Scanner(System.in);
+			stonePicked = myScan.nextInt();	
+		}
+		System.out.print("Successfully choose stone picked:" +stonePicked);
+	}
 	public void play() {
 		displayBoard();
-		System.out.print("Please choose the stone piles(0 to " + (numberOfPiles - 1) + ")");
-		Scanner myScan = new Scanner(System.in);
-		String pileIndex =  myScan.nextLine();
+		int cur = numberOfRounds % 2;
+		if (cur == 0) {
+			if(playerA.isAI()) {
+				aIMove();
+			} else {
+				move();
+			}
+		} else {
+			if(playerB.isAI()) {
+				aIMove();
+			} else {
+				move();
+			}	
+		}
+		
+		
 		numberOfRounds++;
-		
-		
 	}
 
 	private int[] aIMove() {
