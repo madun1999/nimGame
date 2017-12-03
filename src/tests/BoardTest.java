@@ -1,5 +1,7 @@
 package tests;
 
-public class BoardTest {
+import nimGame.*;
 
+public class BoardTest {
+	Board a = new Board();
 }
