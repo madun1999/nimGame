@@ -2,7 +2,10 @@ package nimGame;
 
 public class Player {
 	
-	
+
+	public Player() {
+		
+	}
 	/**
 	 * @param isAI
 	 * @param name
@@ -52,7 +55,6 @@ public class Player {
 				this.name = "Human Player";
 			}
 		}
-		
 		this.name = name;
 	}
 	

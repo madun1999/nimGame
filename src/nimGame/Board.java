@@ -13,67 +13,72 @@ public class Board {
 
 	private List<Integer> noOfStone;
 
-	private int numberOfPiles;
+	private int getNumberOfPiles() {return noOfStone == null ? 0 : noOfStone.size();}
 
 	private int numberOfRounds;
+	
+	private Scanner scanner;
 
 	public void setBoard() {
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("How many piles?");
+		scanner = new Scanner(System.in);
+		System.out.println("How many piles?");
 		int temp = scanner.nextInt();
 		noOfStone = new ArrayList<>();
 		//TODO:Random number of stones
 		for(int index = 0; index < temp; index++) {
-			System.out.print("How many stones for pile " + index);
+			System.out.println("How many stones for pile " + index);
 			noOfStone.add(scanner.nextInt());
+			scanner.nextLine();
 		}
-		scanner.close();
+	//	scanner.close();
 	}
 
 	public void setNameAndAI() {
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("What is the name for the first player? He will go first.");
+		System.out.println("What is the name for the first player? He will go first.");
+		playerA = new Player();
 		playerA.setName(scanner.nextLine());
-		System.out.print("Is he an AI?");
+		System.out.println("Is he an AI?");
 		playerA.setAI(scanner.nextBoolean());
-		System.out.print("What is the name for the second player? He will go second.");
+		scanner.nextLine();
+		System.out.println("What is the name for the second player? He will go second.");
+		playerB = new Player();
 		playerB.setName(scanner.nextLine());
-		System.out.print("Is he an AI?");
+		System.out.println("Is he an AI?");
 		playerB.setAI(scanner.nextBoolean());
-		scanner.close();
+		scanner.nextLine();
 	}
 
 	public void displayBoard() {
 		int cur = numberOfRounds % 2;
 		if (cur == 0) {
-			System.out.print("Player " + playerA + "'s move");
+			System.out.println("Player " + playerA.getName() + "'s move");
 		} else {
-			System.out.print("Player " + playerB + "'s move");
+			System.out.println("Player " + playerB.getName() + "'s move");
 		}
-		System.out.println(Arrays.toString(noOfStone.toArray()));
+		System.out.println("The current board: " + Arrays.toString(noOfStone.toArray()));
 	}
 
 	public void move() {
 		int pileIndex = -1;
-		Scanner myScan;
-		while (pileIndex < 0 || pileIndex > (numberOfPiles - 1)) {
+		while (pileIndex < 0 || pileIndex > (getNumberOfPiles() - 1)) {
 			System.out.println("Note : Enter anumber in the range that is given");
-			System.out.print("Please choose the stone piles(0 to " + (numberOfPiles - 1) + ")");
-			myScan = new Scanner(System.in);
-			pileIndex =  myScan.nextInt();
-			myScan.close();
+			System.out.print("Please choose the stone piles(0 to " + (getNumberOfPiles() - 1) + ")");
+			scanner = new Scanner(System.in);
+			pileIndex =  scanner.nextInt();
+			scanner.nextLine();
 		}
-		System.out.print("Successfully choose pile index:" + pileIndex);
+		System.out.println("Successfully choose pile index:" + pileIndex);
 		int stonePicked = -1;
 		while (stonePicked <= 0 || stonePicked > noOfStone.get(pileIndex)) {
-			System.out.println("Note : Enter anumber in the range that is given");
-			System.out.print("Plear choose the number of stones "
-					+ "that you can going to pick up(1 + " + noOfStone.get(pileIndex) + ")");
-			myScan = new Scanner(System.in);
-			stonePicked = myScan.nextInt();
-			myScan.close();
+			System.out.println("Note : Enter a number in the range that is given");
+			System.out.print("Please choose the number of stones "
+					+ "that you can going to pick up(1 to " + noOfStone.get(pileIndex) + ")");
+			scanner = new Scanner(System.in);
+			stonePicked = scanner.nextInt();
+			scanner.nextLine();
 		}
-		System.out.print("Successfully choose stone picked:" +stonePicked);
+		System.out.println("Successfully choose stone picked:" + stonePicked);
+		noOfStone.set(pileIndex,(noOfStone.get(pileIndex) - stonePicked));
 		removeZeros(pileIndex);
 	}
 
@@ -93,7 +98,7 @@ public class Board {
 		}
 		if(ifWin()) {
 			System.out.println("End Of the Game :)");
-			System.out.println(curPlayer + "wins!");
+			System.out.println(curPlayer.getName() + "wins!");
 		}
 		numberOfRounds++;
 	}
@@ -102,9 +107,11 @@ public class Board {
 		int nimSum = nimSum(noOfStone);
 		if (nimSum == 0) {
 			int a = (int) Math.random() * noOfStone.size();
-			int b = (int) Math.random() * noOfStone.get(a);
+			int t = noOfStone.get(a);
+			int b = (int) Math.random() * t;
 			noOfStone.set(a, b);
 			removeZeros(a);
+			System.out.println("AI removed " + (t - b) + " stones from pile " + a);
 			//TODO:better random
 		}
 		//TODO: difficulty level
@@ -114,6 +121,7 @@ public class Board {
 			if ((n & (1 << (firstZero - 1))) != 0) {
 				noOfStone.set(index, n ^ nimSum);
 				removeZeros(index);
+				System.out.println("AI removed " + (n - (n ^ nimSum)) + " stones from pile " + index);
 				return;
 			}
 		}
@@ -144,6 +152,8 @@ public class Board {
 		Board newboard = new Board();
 		newboard.setBoard();
 		newboard.setNameAndAI();
-		newboard.play();
+		while(!newboard.ifWin()) {
+			newboard.play();
+		}
 	}
 }
