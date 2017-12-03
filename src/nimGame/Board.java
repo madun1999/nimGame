@@ -94,6 +94,5 @@ public class Board {
 		setBoard();
 		setNameAndAI();
 		play();
-		
 	}
 }
