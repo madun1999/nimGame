@@ -20,7 +20,7 @@ public class Board {
 	public void setBoard() {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("How many piles?");
-		noOfStone = new ArrayList<>(scanner.nextInt());
+		noOfStone = new ArrayList<>((scanner.nextInt()));
 		//TODO:Random number of stones
 		for(int index = 0; index < noOfStone.size(); index++) {
 			System.out.print("How many stones for pile" + index);
