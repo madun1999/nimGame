@@ -91,6 +91,9 @@ public class Board {
 	}
 	
 	public static void main(final String[] unused) {
+		setBoard();
+		setNameAndAI();
+		play();
 		
 	}
 }
