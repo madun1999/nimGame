@@ -17,6 +17,7 @@ public class Board {
 	
 	private int numberOfRounds;
 	
+	
 	public void setBoard(int size) {
 		noOfStone = new ArrayList<>();
 		numberOfPiles = size;	
@@ -59,26 +60,27 @@ public class Board {
 			stonePicked = myScan.nextInt();	
 		}
 		System.out.print("Successfully choose stone picked:" +stonePicked);
+		removeZeros(pileIndex);
 	}
 
 	public void play() {
 		displayBoard();
 		int cur = numberOfRounds % 2;
+		Player curPlayer;
 		if (cur == 0) {
-			if(playerA.isAI()) {
-				aIMove();
-			} else {
-				move();
-			}
+			curPlayer = playerA;
 		} else {
-			if(playerB.isAI()) {
-				aIMove();
-			} else {
-				move();
-			}	
+			curPlayer = playerB;
 		}
-		
-		
+		if(curPlayer.isAI()) {
+			aIMove();
+		} else {
+			move();
+		}
+		if(ifWin()) {
+			System.out.println("End Of the Game :)");
+			System.out.println(curPlayer + "wins!");
+		}
 		numberOfRounds++;
 	}
 
