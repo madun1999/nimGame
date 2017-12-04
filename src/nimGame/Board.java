@@ -144,7 +144,7 @@ public class Board {
 	}
 
 	private boolean ifWin() {
-		while (removeZeros(0)) {} // May delete this
+		while (removeZeros(0)) {} //May delete this
 		return noOfStone.isEmpty();
 	}
 
