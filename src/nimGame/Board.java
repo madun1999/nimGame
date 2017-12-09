@@ -1,24 +1,19 @@
 package nimGame;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-
+import edu.illinois.cs.cs125.lib.zen.*;
 public class Board {
 
 	private Player playerA;
-
 	private Player playerB;
 
 	private List<Integer> noOfStone;
-
 	private int getNumberOfPiles() {return noOfStone == null ? 0 : noOfStone.size();}
 
 	private int numberOfRounds;
-	
 	private Scanner scanner;
-
 	public void setBoard() {
 		scanner = new Scanner(System.in);
 		System.out.println("How many piles?");
@@ -30,21 +25,27 @@ public class Board {
 			noOfStone.add(scanner.nextInt());
 			scanner.nextLine();
 		}
-	//	scanner.close();
 	}
-
+	public void oneGame() {
+		while(!this.ifWin()) {
+			this.play();
+		}
+	}
 	public void setNameAndAI() {
 		System.out.println("What is the name for the first player? He will go first.");
-		playerA = new Player();
-		playerA.setName(scanner.nextLine());
+		String name = scanner.nextLine();
 		System.out.println("Is he an AI?");
-		playerA.setAI(scanner.nextBoolean());
+		if (scanner.nextBoolean()) playerA = new AIPlayer();
+		else playerA = new HumanPlayer();
+		playerA.setName(name);
 		scanner.nextLine();
+		
 		System.out.println("What is the name for the second player? He will go second.");
-		playerB = new Player();
-		playerB.setName(scanner.nextLine());
+		name = scanner.nextLine();
 		System.out.println("Is he an AI?");
-		playerB.setAI(scanner.nextBoolean());
+		if (scanner.nextBoolean()) playerB = new AIPlayer();
+		else playerB = new HumanPlayer();
+		playerB.setName(name);
 		scanner.nextLine();
 	}
 
@@ -91,11 +92,14 @@ public class Board {
 		} else {
 			curPlayer = playerB;
 		}
-		if(curPlayer.isAI()) {
-			aIMove();
-		} else {
-			move();
+		int[] pick = curPlayer.move(noOfStone);
+		if (pick == null) {
+			System.out.println(curPlayer.getName() + "resigned");
+			System.out.println("Game Over");
+			noOfStone = new ArrayList<>();
+			return;
 		}
+		noOfStone.set(pick[0],(noOfStone.get(pick[0]) - pick[1]));
 		if(ifWin()) {
 			System.out.println("End Of the Game :)");
 			System.out.println(curPlayer.getName() + "wins!");
@@ -103,37 +107,38 @@ public class Board {
 		numberOfRounds++;
 	}
 
-	private void aIMove() {
-		int nimSum = nimSum(noOfStone);
-		if (nimSum == 0) {
-			int a = (int) Math.random() * noOfStone.size();
-			int t = noOfStone.get(a);
-			int b = (int) Math.random() * t;
-			noOfStone.set(a, b);
-			removeZeros(a);
-			System.out.println("AI removed " + (t - b) + " stones from pile " + a);
-			//TODO:better random
-		}
-		//TODO: difficulty level
-		int firstZero = Integer.SIZE - Integer.numberOfLeadingZeros(nimSum);
-		for (int index = 0; index < noOfStone.size(); index++) {
-			int n  = noOfStone.get(index);
-			if ((n & (1 << (firstZero - 1))) != 0) {
-				noOfStone.set(index, n ^ nimSum);
-				removeZeros(index);
-				System.out.println("AI removed " + (n - (n ^ nimSum)) + " stones from pile " + index);
-				return;
-			}
-		}
-	}
-
-	private int nimSum(List<Integer> noOfStone) {
-		int sum = 0;
-		for (int n : noOfStone) {
-			sum = sum ^ n;
-		}
-		return sum;
-	}
+//	private void aIMove() {
+//		int nimSum = nimSum(noOfStone);
+//		if (nimSum == 0) {
+//			int a = (int) Math.random() * noOfStone.size();
+//			int t = noOfStone.get(a);
+//			int b = (int) Math.random() * t;
+//			noOfStone.set(a, b);
+//			removeZeros(a);
+//			System.out.println("AI removed " + (t - b) + " stones from pile " + a);
+//			//TODO:better random
+//		}
+//		//TODO: difficulty level
+//		int firstZero = Integer.SIZE - Integer.numberOfLeadingZeros(nimSum);
+//		for (int index = 0; index < noOfStone.size(); index++) {
+//			int n  = noOfStone.get(index);
+//			if ((n & (1 << (firstZero - 1))) != 0) {
+//				noOfStone.set(index, n ^ nimSum);
+//				removeZeros(index);
+//				System.out.println("AI removed " + (n - (n ^ nimSum)) + " stones from pile " + index);
+//				return;
+//			}
+//		}
+//	}
+//
+//	private int nimSum(List<Integer> noOfStone) {
+//		int sum = 0;
+//		for (int n : noOfStone) {
+//			sum = sum ^ n;
+//		}
+//		return sum;
+//	}
+	
 	private boolean removeZeros(int pIndex) {
 		//first check if pIndex is valid
 		if (pIndex < noOfStone.size() && noOfStone.get(pIndex) == 0) {
@@ -149,11 +154,12 @@ public class Board {
 	}
 
 	public static void main(final String[] unused) {
-		Board newboard = new Board();
-		newboard.setBoard();
-		newboard.setNameAndAI();
-		while(!newboard.ifWin()) {
-			newboard.play();
+		if (Zen.isRunning()) {
+			Zen.fillOval(20, 30, 4, 4);
+			Board newboard = new Board();
+			newboard.setBoard();
+			newboard.setNameAndAI();
+			newboard.oneGame();
 		}
 	}
 }

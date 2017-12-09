@@ -1,25 +1,9 @@
 package nimGame;
 
-public class Player {
-	
+import java.util.List;
 
-	public Player() {
-		
-	}
-	/**
-	 * @param isAI
-	 * @param name
-	 */
-	public Player(boolean isAI, String name) {
-		super();
-		this.isAI = isAI;
-		this.name = name;
-	}
+public abstract class Player {
 	
-	/**
-	 * if the player is an AI
-	 */
-	private boolean isAI = false;
 	
 	/**
 	 * The name of the Player
@@ -27,17 +11,19 @@ public class Player {
 	private String name = "Player";
 	
 	/**
-	 * @return the isAI
+	 * Empty Constructor.
 	 */
-	public boolean isAI() {
-		return isAI;
+	public Player() {
+		
 	}
+	
 	/**
-	 * @param isAI the isAI to set
+	 * @param name
 	 */
-	public void setAI(boolean isAI) {
-		this.isAI = isAI;
+	public Player(String name) {
+		this.name = name;
 	}
+	
 	/**
 	 * @return the name
 	 */
@@ -49,13 +35,11 @@ public class Player {
 	 */
 	public void setName(String name) {
 		if (name == null || name == "") {
-			if (isAI) {
-				this.name = "AI Player";
-			} else {
-				this.name = "Human Player";
-			}
+			this.name = "Human Player";
+			return;
 		}
 		this.name = name;
 	}
 	
+	public abstract int[] move(List<Integer> noOfStone); 
 }
