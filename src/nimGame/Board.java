@@ -14,6 +14,7 @@ public class Board {
 
 	private int numberOfRounds;
 	private Scanner scanner;
+	
 	public void setBoard() {
 		scanner = new Scanner(System.in);
 		System.out.println("How many piles?");
@@ -106,38 +107,6 @@ public class Board {
 		}
 		numberOfRounds++;
 	}
-
-//	private void aIMove() {
-//		int nimSum = nimSum(noOfStone);
-//		if (nimSum == 0) {
-//			int a = (int) Math.random() * noOfStone.size();
-//			int t = noOfStone.get(a);
-//			int b = (int) Math.random() * t;
-//			noOfStone.set(a, b);
-//			removeZeros(a);
-//			System.out.println("AI removed " + (t - b) + " stones from pile " + a);
-//			//TODO:better random
-//		}
-//		//TODO: difficulty level
-//		int firstZero = Integer.SIZE - Integer.numberOfLeadingZeros(nimSum);
-//		for (int index = 0; index < noOfStone.size(); index++) {
-//			int n  = noOfStone.get(index);
-//			if ((n & (1 << (firstZero - 1))) != 0) {
-//				noOfStone.set(index, n ^ nimSum);
-//				removeZeros(index);
-//				System.out.println("AI removed " + (n - (n ^ nimSum)) + " stones from pile " + index);
-//				return;
-//			}
-//		}
-//	}
-//
-//	private int nimSum(List<Integer> noOfStone) {
-//		int sum = 0;
-//		for (int n : noOfStone) {
-//			sum = sum ^ n;
-//		}
-//		return sum;
-//	}
 	
 	private boolean removeZeros(int pIndex) {
 		//first check if pIndex is valid
@@ -154,12 +123,103 @@ public class Board {
 	}
 
 	public static void main(final String[] unused) {
-		if (Zen.isRunning()) {
-			Zen.fillOval(20, 30, 4, 4);
-			Board newboard = new Board();
-			newboard.setBoard();
-			newboard.setNameAndAI();
-			newboard.oneGame();
+		Board newboard = new Board();
+		newboard.playerA = setUpFirstPlayer();
+		
+		newboard.playerB = setUpSecondPlayer();
+		newboard.setBoard();
+		newboard.oneGame();
+	}
+	public static Player setUpFirstPlayer() {
+		
+		Zen.setEditText("");
+		boolean choice = false;
+		while(Zen.isRunning()) {
+			Zen.drawText("Set Up First Player:", 100, 50);
+			Zen.drawText("Name: ", 100, 100);
+			Zen.drawText("Is AI?: ", 100, 150);
+			int x = Zen.getMouseClickX();
+			int y = Zen.getMouseClickY();
+			Zen.drawText("x = " + x, 300, 300);
+			Zen.drawText("y = " + y, 300, 350);
+			if ( y <= 153 && y >= 135) {
+				if (x <= 230 && x >= 200) {
+					choice = true;
+				}
+				if (x<=273 && x>=248) {
+					choice = false;
+				}
+			}
+			if (choice) {
+				Zen.draw(new Rectangle(200,152,30,3));
+			} else {
+				Zen.draw(new Rectangle(248,152,25,3));
+			}
+			Zen.drawText("Yes", 200, 150);
+			Zen.drawText("No", 250, 150);
+			Zen.drawText("Confirm", 100, 250);
+			String userInputName = Zen.getEditText();
+			Zen.drawText(userInputName, 150, 100);
+			Zen.flipBuffer();
+			if(clickedIn(x,y,98,235,163,256)) {
+				String name = Zen.getEditText() == "" ? "Player1" : Zen.getEditText();
+				Player player;
+				if (choice) player = new AIPlayer();
+				else player = new HumanPlayer();
+				player.setName(name);
+				return player;
+			}
 		}
+		return new AIPlayer();
+	}
+	public static Player setUpSecondPlayer() {
+		Zen.setEditText("");
+		boolean choice = false;
+		while(Zen.isRunning()) {
+			Zen.drawText("Set Up Second Player:", 100, 50);
+			Zen.drawText("Name: ", 100, 100);
+			Zen.drawText("Is AI?: ", 100, 150);
+			int x = Zen.getMouseClickX();
+			int y = Zen.getMouseClickY();
+			Zen.drawText("x = " + x, 300, 300);
+			Zen.drawText("y = " + y, 300, 350);
+			if ( y <= 153 && y >= 135) {
+				if (x <= 230 && x >= 200) {
+					choice = true;
+				}
+				if (x<=273 && x>=248) {
+					choice = false;
+				}
+			}
+			if (choice) {
+				Zen.draw(new Rectangle(200,152,30,3));
+			} else {
+				Zen.draw(new Rectangle(248,152,25,3));
+			}
+			Zen.drawText("Yes", 200, 150);
+			Zen.drawText("No", 250, 150);
+			Zen.drawText("Confirm", 150, 250);
+			String userInputName = Zen.getEditText();
+			Zen.drawText(userInputName, 250, 100);
+			Zen.flipBuffer();
+			if(clickedIn(x,y,98+150,235,163+150,256)) {
+				String name = Zen.getEditText() == "" ? "Player 2" : Zen.getEditText();
+				Player player;
+				if (choice) player = new AIPlayer();
+				else player = new HumanPlayer();
+				player.setName(name);
+				return player;
+			}
+		}
+		return new AIPlayer();
+	}
+	
+	public static boolean clickedIn(int x, int y, int x1,int y1, int x2,int y2) {
+		if ( y <= y2 && y >= y1) {
+			if (x <= x2 && x >= x1) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
