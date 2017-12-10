@@ -27,6 +27,7 @@ public class Board {
 			scanner.nextLine();
 		}
 	}
+	
 	public void oneGame() {
 		while(!this.ifWin()) {
 			this.play();
@@ -124,14 +125,73 @@ public class Board {
 
 	public static void main(final String[] unused) {
 		Board newboard = new Board();
-		newboard.playerA = setUpFirstPlayer();
 		
+		newboard.playerA = setUpFirstPlayer();
 		newboard.playerB = setUpSecondPlayer();
-		newboard.setBoard();
-		newboard.oneGame();
+		newboard.noOfStone = new ArrayList<>();
+		newboard.noOfStone.add(1);
+		newboard.noOfStone.add(3);
+		newboard.noOfStone.add(2);
+//		newboard.setBoard();
+		newboard.oneGameNew();
+		newboard.finish();
+	}
+	public Player oneGameNew() {
+		Player win = null;
+		Player curPlayer = playerA;
+		while(win == null) {
+			oneMove(curPlayer);
+			if(curPlayer.equals(playerA)) curPlayer = playerB;
+			else curPlayer = playerA;
+		}
+		
+		return win;
+	}
+	private int[] oneMove(Player curPlayer) {
+		int pile = 0;
+		int pickNumber = 0;
+		final int noOfPiles = noOfStone.size();
+		while(Zen.isRunning()) {
+			Zen.setColor("white");
+			int x = Zen.getMouseClickX();
+			int y = Zen.getMouseClickY();
+			Zen.drawText("x = " + x, 300, 300);
+			Zen.drawText("y = " + y, 300, 350);
+			Zen.drawText(curPlayer.getName() + ", It's your turn.", 30, 20);
+			Zen.drawText("Remaining Stones:", 30, 40);
+			Zen.drawLine(90, 75, 90, 75+30 * noOfPiles);
+			for (int pileIndex = 0; pileIndex < noOfStone.size(); pileIndex++) {
+				Zen.setColor("white");
+				Zen.drawLine(40, 75 + 30 * (1+pileIndex), 1000, 75 + 30 * (1+pileIndex));
+				Zen.drawText(noOfStone.get(pileIndex).toString(), 50, 75 + 30 * (1+pileIndex)-5);
+				for (int stoneIndex = 0; stoneIndex < noOfStone.get(pileIndex); stoneIndex ++) {
+					if(clickedIn(x,y,90+15*(stoneIndex+1) - 6 , 75+15+30*pileIndex - 10,90+15*(stoneIndex+1) + 14, 75+15+30*pileIndex + 10)) {
+						pile = pileIndex;
+						pickNumber = stoneIndex;
+						
+					}
+					if (pileIndex == pile && stoneIndex <= pickNumber) {
+						Zen.draw(new Circle(90+15*(stoneIndex+1) + 4,75+15+30*pileIndex ,10,"gold"));
+						
+					}
+					Zen.draw(new Circle(90+15*(stoneIndex+1) + 4,75+15+30*pileIndex,10,"gray"));
+				}
+			}
+			Zen.setColor("white");
+			Zen.drawText("Confirm", 60, 75+30 * (2 + noOfPiles)-15);
+			if(clickedIn(x,y,58,75+30 * (2 + noOfPiles)-20,121,75+30 * (2 + noOfPiles)-10)) {
+				return new int[] {pile,pickNumber};
+			} 
+			
+			Zen.flipBuffer();
+		}
+		return null;
+	}
+	private void finish() {
+		// TODO Auto-generated method stub
+		
 	}
 	public static Player setUpFirstPlayer() {
-		
 		Zen.setEditText("");
 		boolean choice = false;
 		while(Zen.isRunning()) {
@@ -140,8 +200,6 @@ public class Board {
 			Zen.drawText("Is AI?: ", 100, 150);
 			int x = Zen.getMouseClickX();
 			int y = Zen.getMouseClickY();
-			Zen.drawText("x = " + x, 300, 300);
-			Zen.drawText("y = " + y, 300, 350);
 			if ( y <= 153 && y >= 135) {
 				if (x <= 230 && x >= 200) {
 					choice = true;
@@ -162,7 +220,8 @@ public class Board {
 			Zen.drawText(userInputName, 150, 100);
 			Zen.flipBuffer();
 			if(clickedIn(x,y,98,235,163,256)) {
-				String name = Zen.getEditText() == "" ? "Player1" : Zen.getEditText();
+				String name = Zen.getEditText().trim().equals("") ? "Player 1" : Zen.getEditText().trim();
+				System.out.println("hello " + name);
 				Player player;
 				if (choice) player = new AIPlayer();
 				else player = new HumanPlayer();
@@ -198,12 +257,13 @@ public class Board {
 			}
 			Zen.drawText("Yes", 200, 150);
 			Zen.drawText("No", 250, 150);
-			Zen.drawText("Confirm", 150, 250);
+			Zen.drawText("Confirm", 250, 250);
 			String userInputName = Zen.getEditText();
-			Zen.drawText(userInputName, 250, 100);
+			Zen.drawText(userInputName, 150, 100);
 			Zen.flipBuffer();
 			if(clickedIn(x,y,98+150,235,163+150,256)) {
-				String name = Zen.getEditText() == "" ? "Player 2" : Zen.getEditText();
+				String name = Zen.getEditText().trim().equals("") ? "Player 2" : Zen.getEditText().trim();
+				System.out.println("hi " + name);
 				Player player;
 				if (choice) player = new AIPlayer();
 				else player = new HumanPlayer();
