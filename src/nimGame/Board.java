@@ -223,7 +223,7 @@ public class Board {
 			Zen.drawText(userInputName, 150, 100);
 			Zen.flipBuffer();
 			if(clickedIn(x,y,98,235,163,256)) {
-				String name = Zen.getEditText() == "" ? "Player 1" : Zen.getEditText();
+				String name = Zen.getEditText().trim().equals("") ? "Player 1" : Zen.getEditText();
 				Player player;
 				if (choice) player = new AIPlayer();
 				else player = new HumanPlayer();
@@ -263,7 +263,6 @@ public class Board {
 			Zen.flipBuffer();
 			if(clickedIn(x,y,98+150,235,163+150,256)) {
 				String name = Zen.getEditText().trim().equals("") ? "Player 2" : Zen.getEditText().trim();
-				System.out.println("hi " + name);
 				Player player;
 				if (choice) player = new AIPlayer();
 				else player = new HumanPlayer();
