@@ -7,7 +7,7 @@ import edu.illinois.cs.cs125.lib.zen.Zen;
 
 public class AIPlayer extends Player{
 
-	private int difficulty = 500;
+	private int difficulty = 60;
 	/**
 	 * @return the difficulty
 	 */

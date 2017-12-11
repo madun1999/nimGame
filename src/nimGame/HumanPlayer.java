@@ -43,6 +43,7 @@ public class HumanPlayer extends Player{
 		int pickNumber = 0;
 		final int noOfPiles = noOfStone.size();
 		while(Zen.isRunning()) {
+			Board.showManualButton();
 			Zen.setColor("white");
 			int x = Zen.getMouseClickX();
 			int y = Zen.getMouseClickY();

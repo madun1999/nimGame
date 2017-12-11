@@ -198,6 +198,7 @@ public class Board {
 		Zen.setEditText("");
 		boolean choice = false;
 		while(Zen.isRunning()) {
+			showManualButton();
 			Zen.drawText("Set Up First Player:", 100, 50);
 			Zen.drawText("Name: ", 100, 100);
 			Zen.drawText("Is AI?: ", 100, 150);
@@ -237,6 +238,7 @@ public class Board {
 		Zen.setEditText("");
 		boolean choice = false;
 		while(Zen.isRunning()) {
+			showManualButton();
 			Zen.drawText("Set Up Second Player:", 100, 50);
 			Zen.drawText("Name: ", 100, 100);
 			Zen.drawText("Is AI?: ", 100, 150);
@@ -272,11 +274,38 @@ public class Board {
 		}
 		return new AIPlayer();
 	}
+	public static void showManualButton() {
+		Zen.drawText("Click me to read the Guide",400, 20);
+		int x = Zen.getMouseClickX();
+		int y = Zen.getMouseClickY();
+		if (clickedIn(x,y,400,0,500,20)) {
+			Zen.flipBuffer();
+			showManual();
+		}
+	}
+	public static void showManual() {
+		int a = 30;
+		int b = 30;
+		int c = 30;
+		Zen.drawText("This is a game about picking stones.", c, a);
+		Zen.drawText("There are some piles of stones on the ground.", c, a+b);
+		Zen.drawText("Two players take turns to pick up the stones.", c, a+3*b);
+		Zen.drawText("In each turn, the player should pick up at least one stone from only one pile.", c, a+4*b);
+		Zen.drawText("There are no upper limit for each pick.", c, a+5*b);
+		Zen.drawText("The player who picks up the last stone on the ground wins.", c, a+6*b);
+		Zen.drawText("You will need to set the number of stones in each pile.", c, a+8*b);
+		Zen.drawText("The AI is a perfect player when there is less than 60 stones in total.", c, a+10*b);
+		Zen.drawText("Try to beat it!", c, a+11*b);
+		Zen.drawText("Click anywhere to return to the last screen.", c, a+13*b);
+		Zen.flipBuffer();
+		Zen.waitForClick();
+	}
 	
 	public void setNumerOfPiles() {
 		Zen.setEditText("");
 		int p = 0;
 		while(Zen.isRunning()) {
+			showManualButton();
 			Zen.drawText("How many piles?", 100, 50);
 			for (int i = 1; i < 9; i ++) {
 				Zen.drawText(i + "", 100 + (i-1)*30, 100);
@@ -307,6 +336,7 @@ public class Board {
 	public void setEachPile(int index) {
 		Zen.setEditText("");
 		while(Zen.isRunning()) {
+			showManualButton();
 			Zen.drawText("Number of Stones for pile " + index + ": ", 100, 50);
 			Zen.drawText(index + ":", 100, 100);
 			String userInput = Zen.getEditText();
