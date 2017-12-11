@@ -8,7 +8,7 @@ public class Board {
 
 	private Player playerA;
 	private Player playerB;
-
+	private int tempNumberOfPiles;
 	private List<Integer> noOfStone;
 	private int getNumberOfPiles() {return noOfStone == null ? 0 : noOfStone.size();}
 
@@ -125,13 +125,12 @@ public class Board {
 	public static void main(final String[] unused) {
 		Board newboard = new Board();
 		newboard.playerA = setUpFirstPlayer();
-		
-		newboard.playerB = setUpSecondPlayer();
-		newboard.setBoard();
+		newboard.playerB = setUpSecondPlayer();	
+		newboard.setNumerOfPiles();
+		newboard.setPiles();
 		newboard.oneGame();
 	}
 	public static Player setUpFirstPlayer() {
-		
 		Zen.setEditText("");
 		boolean choice = false;
 		while(Zen.isRunning()) {
@@ -162,7 +161,7 @@ public class Board {
 			Zen.drawText(userInputName, 150, 100);
 			Zen.flipBuffer();
 			if(clickedIn(x,y,98,235,163,256)) {
-				String name = Zen.getEditText() == "" ? "Player1" : Zen.getEditText();
+				String name = Zen.getEditText() == "" ? "Player 1" : Zen.getEditText();
 				Player player;
 				if (choice) player = new AIPlayer();
 				else player = new HumanPlayer();
@@ -198,9 +197,9 @@ public class Board {
 			}
 			Zen.drawText("Yes", 200, 150);
 			Zen.drawText("No", 250, 150);
-			Zen.drawText("Confirm", 150, 250);
+			Zen.drawText("Confirm", 250, 250);
 			String userInputName = Zen.getEditText();
-			Zen.drawText(userInputName, 250, 100);
+			Zen.drawText(userInputName, 150, 100);
 			Zen.flipBuffer();
 			if(clickedIn(x,y,98+150,235,163+150,256)) {
 				String name = Zen.getEditText() == "" ? "Player 2" : Zen.getEditText();
@@ -214,7 +213,75 @@ public class Board {
 		return new AIPlayer();
 	}
 	
-	public static boolean clickedIn(int x, int y, int x1,int y1, int x2,int y2) {
+	public void setNumerOfPiles() {
+		Zen.setEditText("");
+		int p = 0;
+		while(Zen.isRunning()) {
+			Zen.drawText("How many piles?", 100, 50);
+			for (int i = 1; i < 9; i ++) {
+				Zen.drawText(i + "", 100 + (i-1)*30, 100);
+			}
+			int x = Zen.getMouseClickX();
+			int y = Zen.getMouseClickY();
+			Zen.drawText("x = " + x, 300, 300);
+			Zen.drawText("y = " + y, 300, 350);
+			for (int i = 1; i < 9; i ++) {
+				if(clickedIn(x,y,100 + (i-1)*30 - 10,100 - 10,100 + (i-1)*30 + 10, 100 + 10)) {
+					Zen.draw(new Rectangle(100 + (i-1)*30, 105, 10, 3));
+					p = i;
+				}
+			}
+			Zen.drawText("Confirm", 150, 250);
+			if(clickedIn(x,y,150 - 10,250 - 10, 210 ,260)) {
+				tempNumberOfPiles = p;
+				noOfStone = new ArrayList<>();
+				return;
+			}
+			Zen.flipBuffer();
+		}
+	}
+	
+	public void setPiles() {
+		for (int i = 1; i <= tempNumberOfPiles; i++) {
+			setEachPile(i);
+		}
+	}
+	public void setEachPile(int index) {
+		Zen.setEditText("");
+		while(Zen.isRunning()) {
+			Zen.drawText("Number of Stones for pile " + index + ": ", 100, 50);
+			Zen.drawText(index + ":", 100, 100);
+			String userInput = Zen.getEditText();
+			Zen.drawText(userInput, 150 , 100);
+			Zen.drawText("Confirm", 300, 100 + (index - 1) * 30);
+			int x = Zen.getMouseClickX();
+			int y = Zen.getMouseClickY();
+			Zen.drawText("x = " + x, 300, 300);
+			Zen.drawText("y = " + y, 300, 350);
+			if(clickedIn(x,y,290,100 + (index - 1) * 30 - 10,360, 120 + (index - 1) * 30)) {
+				noOfStone.add(Integer.valueOf(userInput));
+				return;
+			}
+			Zen.flipBuffer();
+		}
+		
+		
+		
+	}
+
+	public String getString() {
+		String userInput;
+		while(Zen.isRunning()) {
+			userInput = Zen.getEditText();
+			if(userInput.contains("\n")) {
+				return userInput;
+			}
+			Zen.flipBuffer();
+		}
+		return "";
+	}
+	
+	public static boolean clickedIn(int x, int y, int x1, int y1, int x2,int y2) {
 		if ( y <= y2 && y >= y1) {
 			if (x <= x2 && x >= x1) {
 				return true;
