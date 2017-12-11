@@ -46,8 +46,6 @@ public class HumanPlayer extends Player{
 			Zen.setColor("white");
 			int x = Zen.getMouseClickX();
 			int y = Zen.getMouseClickY();
-			Zen.drawText("x = " + x, 300, 300);
-			Zen.drawText("y = " + y, 300, 350);
 			Zen.drawText(this.getName() + ", It's your turn.", 30, 20);
 			Zen.drawText("Remaining Stones:", 30, 40);
 			Zen.drawText("Pile     Stone", 43, 70);
