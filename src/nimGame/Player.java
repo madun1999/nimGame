@@ -41,5 +41,7 @@ public abstract class Player {
 		this.name = name;
 	}
 	
-	public abstract int[] move(List<Integer> noOfStone); 
+	public abstract int[] move(List<Integer> noOfStone);
+
+	public abstract int[] oneMove(boolean equals, List<Integer> noOfStone);
 }

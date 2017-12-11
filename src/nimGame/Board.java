@@ -124,71 +124,75 @@ public class Board {
 	}
 
 	public static void main(final String[] unused) {
-		Board newboard = new Board();
-		
-		newboard.playerA = setUpFirstPlayer();
-		newboard.playerB = setUpSecondPlayer();
-		newboard.noOfStone = new ArrayList<>();
-		newboard.noOfStone.add(1);
-		newboard.noOfStone.add(3);
-		newboard.noOfStone.add(2);
-//		newboard.setBoard();
-		newboard.oneGameNew();
-		newboard.finish();
+		boolean con = true;
+		while(con) {
+			Board newboard = new Board();
+			newboard.playerA = setUpFirstPlayer();
+			newboard.playerB = setUpSecondPlayer();
+			newboard.noOfStone = new ArrayList<>();
+			newboard.noOfStone.add(1);
+			newboard.noOfStone.add(3);
+			newboard.noOfStone.add(2);
+	//		newboard.setBoard();
+			Player win = newboard.oneGameNew();
+			con = newboard.finish(win);
+		}
+		Zen.drawText("Goodbye!", 150, 150);
+		Zen.flipBuffer();
 	}
 	public Player oneGameNew() {
 		Player win = null;
 		Player curPlayer = playerA;
 		while(win == null) {
-			oneMove(curPlayer);
+			int[] pick = curPlayer.oneMove(curPlayer.equals(playerA), noOfStone);
+			noOfStone.set(pick[0], noOfStone.get(pick[0])-pick[1]-1);
+			removeZeros(pick[0]);
+			if(ifWin()) {
+				return curPlayer;
+			}
 			if(curPlayer.equals(playerA)) curPlayer = playerB;
 			else curPlayer = playerA;
 		}
 		
 		return win;
 	}
-	private int[] oneMove(Player curPlayer) {
-		int pile = 0;
-		int pickNumber = 0;
-		final int noOfPiles = noOfStone.size();
-		while(Zen.isRunning()) {
-			Zen.setColor("white");
-			int x = Zen.getMouseClickX();
-			int y = Zen.getMouseClickY();
-			Zen.drawText("x = " + x, 300, 300);
-			Zen.drawText("y = " + y, 300, 350);
-			Zen.drawText(curPlayer.getName() + ", It's your turn.", 30, 20);
-			Zen.drawText("Remaining Stones:", 30, 40);
-			Zen.drawLine(90, 75, 90, 75+30 * noOfPiles);
-			for (int pileIndex = 0; pileIndex < noOfStone.size(); pileIndex++) {
-				Zen.setColor("white");
-				Zen.drawLine(40, 75 + 30 * (1+pileIndex), 1000, 75 + 30 * (1+pileIndex));
-				Zen.drawText(noOfStone.get(pileIndex).toString(), 50, 75 + 30 * (1+pileIndex)-5);
-				for (int stoneIndex = 0; stoneIndex < noOfStone.get(pileIndex); stoneIndex ++) {
-					if(clickedIn(x,y,90+15*(stoneIndex+1) - 6 , 75+15+30*pileIndex - 10,90+15*(stoneIndex+1) + 14, 75+15+30*pileIndex + 10)) {
-						pile = pileIndex;
-						pickNumber = stoneIndex;
-						
-					}
-					if (pileIndex == pile && stoneIndex <= pickNumber) {
-						Zen.draw(new Circle(90+15*(stoneIndex+1) + 4,75+15+30*pileIndex ,10,"gold"));
-						
-					}
-					Zen.draw(new Circle(90+15*(stoneIndex+1) + 4,75+15+30*pileIndex,10,"gray"));
+	private boolean finish(Player player) {
+		boolean again = false;
+		if(Zen.isRunning()) {
+			boolean confirmed = false;
+			while (!confirmed) {
+				
+				int x = Zen.getMouseClickX();
+				int y = Zen.getMouseClickY();
+				Zen.drawText(player.getName() + " wins!", 200, 200);
+				Zen.drawText("Play again?", 200, 230);
+				Zen.drawText("Yes", 200, 260);
+				Zen.drawText("No", 240, 260);
+				Zen.drawText("Confirm", 200,290);
+				
+				if (clickedIn(x,y,200,242,230,262)) {
+					again = true;
 				}
+				if (clickedIn(x,y,240,242,265,262)) {
+					again = false;
+				}
+				
+				if (again) {
+					Zen.draw(new Rectangle(200,262,30,3));
+				} else {
+					Zen.draw(new Rectangle(240,262,25,3));
+				}
+				
+				if (clickedIn(x,y,200,275,265,290)) {
+					Zen.flipBuffer();
+					return again;
+					
+				}
+				Zen.flipBuffer();
+				Zen.waitForClick();
 			}
-			Zen.setColor("white");
-			Zen.drawText("Confirm", 60, 75+30 * (2 + noOfPiles)-15);
-			if(clickedIn(x,y,58,75+30 * (2 + noOfPiles)-20,121,75+30 * (2 + noOfPiles)-10)) {
-				return new int[] {pile,pickNumber};
-			} 
-			
-			Zen.flipBuffer();
 		}
-		return null;
-	}
-	private void finish() {
-		// TODO Auto-generated method stub
+		return false;
 		
 	}
 	public static Player setUpFirstPlayer() {
