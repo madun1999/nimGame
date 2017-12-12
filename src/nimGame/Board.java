@@ -134,6 +134,7 @@ public class Board {
 			Player win = newboard.oneGameNew();
 			con = newboard.finish(win);
 		}
+		Zen.setFont("Times-30");
 		Zen.drawText("Goodbye!", 150, 150);
 		Zen.flipBuffer();
 	}
@@ -201,6 +202,9 @@ public class Board {
 			showManualButton();
 			Zen.drawText("Set Up First Player:", 100, 50);
 			Zen.drawText("Name: ", 100, 100);
+			Zen.setFont("Times-12");
+			Zen.drawText("(Type to enter your name)", 140,120);
+			Zen.setFont("Times-18");
 			Zen.drawText("Is AI?: ", 100, 150);
 			int x = Zen.getMouseClickX();
 			int y = Zen.getMouseClickY();
@@ -242,6 +246,9 @@ public class Board {
 			Zen.drawText("Set Up Second Player:", 100, 50);
 			Zen.drawText("Name: ", 100, 100);
 			Zen.drawText("Is AI?: ", 100, 150);
+			Zen.setFont("Times-12");
+			Zen.drawText("(Type to enter your name)", 140,120);
+			Zen.setFont("Times-18");
 			int x = Zen.getMouseClickX();
 			int y = Zen.getMouseClickY();
 			if ( y <= 153 && y >= 135) {
@@ -284,9 +291,12 @@ public class Board {
 		}
 	}
 	public static void showManual() {
-		int a = 30;
+		int a = 60;
 		int b = 30;
 		int c = 30;
+		Zen.setFont("Times",20);
+		Zen.drawText("The Nim Game", 60, 30);
+		Zen.setFont("Times",16);
 		Zen.drawText("This is a game about picking stones.", c, a);
 		Zen.drawText("There are some piles of stones on the ground.", c, a+b);
 		Zen.drawText("Two players take turns to pick up the stones.", c, a+3*b);
@@ -297,15 +307,18 @@ public class Board {
 		Zen.drawText("The AI is a perfect player when there is less than 60 stones in total.", c, a+10*b);
 		Zen.drawText("Try to beat it!", c, a+11*b);
 		Zen.drawText("Click anywhere to return to the last screen.", c, a+13*b);
+		Zen.setFont("Times",18);
 		Zen.flipBuffer();
 		Zen.waitForClick();
 	}
 	
 	public void setNumerOfPiles() {
 		Zen.setEditText("");
-		int p = 0;
+		int p = 3;
+		
 		while(Zen.isRunning()) {
 			showManualButton();
+			
 			Zen.drawText("How many piles?", 100, 50);
 			for (int i = 1; i < 9; i ++) {
 				Zen.drawText(i + "", 100 + (i-1)*30, 100);
@@ -314,10 +327,11 @@ public class Board {
 			int y = Zen.getMouseClickY();
 			for (int i = 1; i < 9; i ++) {
 				if(clickedIn(x,y,100 + (i-1)*30 - 10,100 - 10,100 + (i-1)*30 + 10, 100 + 10)) {
-					Zen.draw(new Rectangle(100 + (i-1)*30, 105, 10, 3));
+					
 					p = i;
 				}
 			}
+			Zen.draw(new Rectangle(100 + (p-1)*30, 105, 10, 3));
 			Zen.drawText("Confirm", 150, 250);
 			if(clickedIn(x,y,150 - 10,250 - 10, 210 ,260)) {
 				tempNumberOfPiles = p;
@@ -339,6 +353,9 @@ public class Board {
 			showManualButton();
 			Zen.drawText("Number of Stones for pile " + index + ": ", 100, 50);
 			Zen.drawText(index + ":", 100, 100);
+			Zen.setFont("Times-12");
+			Zen.drawText("(Type number)", 140,120);
+			Zen.setFont("Times-18");
 			String userInput = Zen.getEditText();
 			Zen.drawText(userInput, 150 , 100);
 			Zen.drawText("Confirm", 300, 100 + (index % 2) * 30);
