@@ -11,7 +11,7 @@ Nim Game implemented with Java.
 Perfect AI implemented. The AI plays randomly when there is more than 60 stones in total. The AI plays perfectly when there is less than or equal to 60 stones in total.
 
 ## Library Used
-Zen library provided by UIUC CS125 course staff. 
+Zen --- provided by UIUC CS125 course staff. 
 
 ## In-game guide
 An in-game guide about the game "Nim" is always availible except when AI is picking. Simply click the "Click to view the guide" text on the top right corner to open the guide.
