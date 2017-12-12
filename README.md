@@ -1,3 +1,3 @@
 # nimGame
 Nim Game implemented with Java.
-#Library used:
+Perfect AI implemented. 
